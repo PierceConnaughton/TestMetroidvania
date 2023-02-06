@@ -10,6 +10,10 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb2D;
     private Animator myAnimator;
 
+    private bool facingRight = true;
+
+
+
     //variables to play with
     public float speed = 2.0f;
     public float horizMovement; // =1 or -1 or 0
@@ -35,5 +39,29 @@ public class PlayerMovement : MonoBehaviour
     {
         //move the character left or right
         rb2D.velocity = new Vector2(horizMovement * speed, rb2D.velocity.y);
+        Flip(horizMovement);
+
+        //check speed of player and set it to speed so animation of running plays
+        myAnimator.SetFloat("speed", Mathf.Abs(horizMovement));
+    }
+
+    //flipping function
+    private void Flip(float horizon)
+    {
+        //check what direction we are currently facing and if we are moving left or right
+        //if we are moving leftt and facing right or moving right and facing left change direction
+        if ((horizon < 0 && facingRight) || (horizon > 0 && !facingRight))
+        {
+            //change direction to the opposite of what we are currently on
+            facingRight = !facingRight;
+
+            //get the current players scale
+            Vector3 theScale = transform.localScale;
+
+            //change the x axis of the current player scale and multiply it by -1 to get it in the correct direction
+            theScale.x *= -1;
+
+            transform.localScale = theScale;
+        }
     }
 }
